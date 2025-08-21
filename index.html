@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa Conceptual - Sistemas de Bases de Datos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .container {
+            max-width: 2200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 50px;
+            font-size: 2.8rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .mapa {
+            position: relative;
+            width: 100%;
+            height: 1800px;
+            margin: 0 auto;
+            min-width: 1800px;
+        }
+
+        .nodo {
+            position: absolute;
+            padding: 18px 25px;
+            border-radius: 15px;
+            color: white;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.2;
+        }
+
+        .nodo:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            z-index: 10;
+        }
+
+        /* Nodo Principal */
+        .principal {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            font-size: 20px;
+            font-weight: 700;
+            width: 350px;
+            height: 80px;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Categorías Principales - Nivel 2 */
+        .categoria {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            font-size: 16px;
+            width: 220px;
+            height: 70px;
+            font-weight: 600;
+        }
+
+        /* Conceptos - Nivel 3 */
+        .concepto {
+            background: linear-gradient(45deg, #27ae60, #219a52);
+            font-size: 14px;
+            width: 180px;
+            height: 60px;
+            font-weight: 500;
+        }
+
+        /* Detalles - Nivel 4 */
+        .detalle {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            font-size: 12px;
+            width: 150px;
+            height: 50px;
+        }
+
+        /* Sub-detalles - Nivel 5 */
+        .subdetalle {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            font-size: 11px;
+            width: 130px;
+            height: 45px;
+        }
+
+        /* Posicionamiento específico para cada categoría */
+        
+        /* CONCEPTOS FUNDAMENTALES */
+        .cat-conceptos { top: 200px; left: 100px; }
+        .concepto-dato { top: 320px; left: 50px; }
+        .concepto-info { top: 320px; left: 250px; }
+        .concepto-bd { top: 420px; left: 50px; }
+        .concepto-sistema { top: 420px; left: 250px; }
+
+        /* OBJETIVOS Y APLICACIONES */
+        .cat-objetivos { top: 200px; left: 450px; }
+        .concepto-objetivos { top: 320px; left: 400px; }
+        .concepto-aplicaciones { top: 320px; left: 600px; }
+        .det-banca { top: 420px; left: 350px; }
+        .det-aerolineas { top: 420px; left: 520px; }
+        .det-universidades { top: 520px; left: 350px; }
+        .det-ventas { top: 520px; left: 520px; }
+        .det-telecom { top: 620px; left: 435px; }
+
+        /* MODELOS DE DATOS */
+        .cat-modelos { top: 200px; left: 800px; }
+        .concepto-relacional { top: 320px; left: 720px; }
+        .concepto-er { top: 320px; left: 920px; }
+        .concepto-objetos { top: 420px; left: 720px; }
+        .concepto-semiestr { top: 420px; left: 920px; }
+
+        /* ARQUITECTURA SGBD */
+        .cat-arquitectura { top: 200px; left: 1150px; }
+        .concepto-almacen { top: 320px; left: 1050px; }
+        .concepto-consultas { top: 320px; left: 1280px; }
+        
+        /* Detalles Gestor de Almacenamiento */
+        .det-autoriz { top: 450px; left: 950px; }
+        .det-transac { top: 450px; left: 1120px; }
+        .det-archivos { top: 550px; left: 950px; }
+        .det-memoria { top: 550px; left: 1120px; }
+        
+        /* Detalles Procesador de Consultas */
+        .det-ddl-int { top: 450px; left: 1200px; }
+        .det-dml-comp { top: 450px; left: 1380px; }
+        .det-motor { top: 550px; left: 1290px; }
+
+        /* NIVELES Y USUARIOS */
+        .cat-niveles { top: 750px; left: 200px; }
+        .concepto-niveles { top: 870px; left: 100px; }
+        .concepto-usuarios { top: 870px; left: 320px; }
+        
+        /* Niveles de Abstracción */
+        .det-vista { top: 1000px; left: 50px; }
+        .det-logico { top: 1100px; left: 50px; }
+        .det-fisico { top: 1200px; left: 50px; }
+        
+        /* Tipos de Usuarios */
+        .det-normales { top: 1000px; left: 270px; }
+        .det-program { top: 1000px; left: 440px; }
+        .det-espec { top: 1100px; left: 270px; }
+        .det-dba { top: 1100px; left: 440px; }
+
+        /* LENGUAJES BD */
+        .cat-lenguajes { top: 750px; left: 800px; }
+        .concepto-ddl { top: 870px; left: 700px; }
+        .concepto-dml { top: 870px; left: 900px; }
+        
+        /* Comandos DDL */
+        .sub-create { top: 1000px; left: 650px; }
+        .sub-drop { top: 1000px; left: 800px; }
+        
+        /* Comandos DML */
+        .sub-select { top: 1000px; left: 850px; }
+        .sub-insert { top: 1000px; left: 1000px; }
+        .sub-delete { top: 1100px; left: 850px; }
+        .sub-update { top: 1100px; left: 1000px; }
+
+        .linea {
+            position: absolute;
+            background: linear-gradient(45deg, #34495e, #2c3e50);
+            transform-origin: left center;
+            height: 3px;
+            border-radius: 2px;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            font-size: 13px;
+            max-width: 350px;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            line-height: 1.4;
+        }
+
+        .tooltip.visible {
+            opacity: 1;
+        }
+
+        /* Leyenda de colores */
+        .leyenda {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-size: 12px;
+            z-index: 100;
+        }
+
+        .leyenda-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .leyenda-color {
+            width: 20px;
+            height: 15px;
+            border-radius: 3px;
+            margin-right: 8px;
+        }
+
+        .color-principal { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .color-categoria { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .color-concepto { background: linear-gradient(45deg, #27ae60, #219a52); }
+        .color-detalle { background: linear-gradient(45deg, #9b59b6, #8e44ad); }
+        .color-subdetalle { background: linear-gradient(45deg, #f39c12, #e67e22); }
+
+        @media (max-width: 1400px) {
+            .container {
+                overflow-x: auto;
+            }
+            
+            .mapa {
+                min-width: 1600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Sistemas de Bases de Datos</h1>
+        
+        <div class="leyenda">
+            <h4 style="margin-bottom: 10px; color: #2c3e50;">Niveles Jerárquicos</h4>
+            <div class="leyenda-item">
+                <div class="leyenda-color color-principal"></div>
+                <span>Concepto Principal</span>
+            </div>
+            <div class="leyenda-item">
+                <div class="leyenda-color color-categoria"></div>
+                <span>Categorías</span>
+            </div>
+            <div class="leyenda-item">
+                <div class="leyenda-color color-concepto"></div>
+                <span>Conceptos</span>
+            </div>
+            <div class="leyenda-item">
+                <div class="leyenda-color color-detalle"></div>
+                <span>Detalles</span>
+            </div>
+            <div class="leyenda-item">
+                <div class="leyenda-color color-subdetalle"></div>
+                <span>Comandos</span>
+            </div>
+        </div>
+        
+        <div class="mapa" id="mapa">
+            <!-- Nodo Principal -->
+            <div class="nodo principal" 
+                 data-tooltip="Conjunto completo de datos interrelacionados y programas de aplicación para acceder y modificar dichos datos">
+                SISTEMAS DE<br>BASES DE DATOS
+            </div>
+
+            <!-- CONCEPTOS FUNDAMENTALES -->
+            <div class="nodo categoria cat-conceptos" 
+                 data-tooltip="Definiciones básicas para entender los sistemas de bases de datos">
+                CONCEPTOS<br>FUNDAMENTALES
+            </div>
+            
+            <div class="nodo concepto concepto-dato" 
+                 data-tooltip="Representación simbólica de un atributo o característica de una entidad">
+                DATO
+            </div>
+            <div class="nodo concepto concepto-info" 
+                 data-tooltip="Conjunto de datos ordenados y procesados para satisfacer necesidades del usuario">
+                INFORMACIÓN
+            </div>
+            <div class="nodo concepto concepto-bd" 
+                 data-tooltip="Colección de datos relacionados, almacenados con redundancia controlada">
+                BASE DE<br>DATOS
+            </div>
+            <div class="nodo concepto concepto-sistema" 
+                 data-tooltip="Datos interrelacionados + programas de aplicación para acceso y modificación">
+                SISTEMA<br>DE BD
+            </div>
+
+            <!-- OBJETIVOS Y APLICACIONES -->
+            <div class="nodo categoria cat-objetivos" 
+                 data-tooltip="Propósitos y campos de aplicación de las bases de datos">
+                OBJETIVOS Y<br>APLICACIONES
+            </div>
+            
+            <div class="nodo concepto concepto-objetivos" 
+                 data-tooltip="Representación fidedigna y servidor eficiente de datos organizacionales">
+                OBJETIVOS
+            </div>
+            <div class="nodo concepto concepto-aplicaciones" 
+                 data-tooltip="Diversos campos donde se aplican las bases de datos">
+                APLICACIONES
+            </div>
+            
+            <div class="nodo detalle det-banca" 
+                 data-tooltip="Sistemas bancarios y financieros">
+                BANCA
+            </div>
+            <div class="nodo detalle det-aerolineas" 
+                 data-tooltip="Sistemas de reservas y gestión de vuelos">
+                AEROLÍNEAS
+            </div>
+            <div class="nodo detalle det-universidades" 
+                 data-tooltip="Gestión académica y administrativa educativa">
+                UNIVERSIDADES
+            </div>
+            <div class="nodo detalle det-ventas" 
+                 data-tooltip="Sistemas de ventas y recursos humanos">
+                VENTAS/<br>RRHH
+            </div>
+            <div class="nodo detalle det-telecom" 
+                 data-tooltip="Sistemas de telecomunicaciones">
+                TELECOMUNICACIONES
+            </div>
+
+            <!-- MODELOS DE DATOS -->
+            <div class="nodo categoria cat-modelos" 
+                 data-tooltip="Diferentes formas de estructurar y representar los datos">
+                MODELOS<br>DE DATOS
+            </div>
+            
+            <div class="nodo concepto concepto-relacional" 
+                 data-tooltip="Utiliza tablas para representar datos y sus relaciones">
+                MODELO<br>RELACIONAL
+            </div>
+            <div class="nodo concepto concepto-er" 
+                 data-tooltip="Basado en entidades y relaciones del mundo real">
+                MODELO<br>E-R
+            </div>
+            <div class="nodo concepto concepto-objetos" 
+                 data-tooltip="Incorpora encapsulación, métodos e identidad de objetos">
+                MODELO ORIENTADO<br>A OBJETOS
+            </div>
+            <div class="nodo concepto concepto-semiestr" 
+                 data-tooltip="Permite diferentes atributos para elementos del mismo tipo (XML)">
+                MODELO<br>SEMIESTRUCTURADO
+            </div>
+
+            <!-- ARQUITECTURA SGBD -->
+            <div class="nodo categoria cat-arquitectura" 
+                 data-tooltip="Estructura interna de un Sistema Gestor de Bases de Datos">
+                ARQUITECTURA<br>SGBD
+            </div>
+            
+            <div class="nodo concepto concepto-almacen" 
+                 data-tooltip="Proporciona interfaz entre datos de bajo nivel y programas de aplicación">
+                GESTOR DE<br>ALMACENAMIENTO
+            </div>
+            <div class="nodo concepto concepto-consultas" 
+                 data-tooltip="Simplifica y optimiza el acceso a los datos">
+                PROCESADOR DE<br>CONSULTAS
+            </div>
+            
+            <!-- Detalles Gestor de Almacenamiento -->
+            <div class="nodo detalle det-autoriz" 
+                 data-tooltip="Controla permisos de acceso y mantiene integridad de datos">
+                GESTOR<br>AUTORIZACIONES
+            </div>
+            <div class="nodo detalle det-transac" 
+                 data-tooltip="Gestiona y coordina las transacciones del sistema">
+                GESTOR<br>TRANSACCIONES
+            </div>
+            <div class="nodo detalle det-archivos" 
+                 data-tooltip="Administra el almacenamiento físico de archivos">
+                GESTOR DE<br>ARCHIVOS
+            </div>
+            <div class="nodo detalle det-memoria" 
+                 data-tooltip="Gestiona la memoria temporal y caché del sistema">
+                GESTOR<br>MEMORIA
+            </div>
+            
+            <!-- Detalles Procesador de Consultas -->
+            <div class="nodo detalle det-ddl-int" 
+                 data-tooltip="Interpreta comandos de definición de estructura">
+                INTÉRPRETE<br>DDL
+            </div>
+            <div class="nodo detalle det-dml-comp" 
+                 data-tooltip="Compila comandos de manipulación de datos">
+                COMPILADOR<br>DML
+            </div>
+            <div class="nodo detalle det-motor" 
+                 data-tooltip="Ejecuta y optimiza las consultas del sistema">
+                MOTOR DE<br>EVALUACIÓN
+            </div>
+
+            <!-- NIVELES Y USUARIOS -->
+            <div class="nodo categoria cat-niveles" 
+                 data-tooltip="Niveles de abstracción y tipos de usuarios del sistema">
+                NIVELES Y<br>USUARIOS
+            </div>
+            
+            <div class="nodo concepto concepto-niveles" 
+                 data-tooltip="Tres niveles de abstracción para visualizar los datos">
+                NIVELES DE<br>ABSTRACCIÓN
+            </div>
+            <div class="nodo concepto concepto-usuarios" 
+                 data-tooltip="Diferentes categorías de usuarios del sistema">
+                TIPOS DE<br>USUARIOS
+            </div>
+            
+            <!-- Niveles de Abstracción -->
+            <div class="nodo detalle det-vista" 
+                 data-tooltip="Describe parte específica de la BD, oculta información por seguridad">
+                NIVEL DE<br>VISTA
+            </div>
+            <div class="nodo detalle det-logico" 
+                 data-tooltip="Describe qué datos se almacenan y las relaciones entre ellos">
+                NIVEL<br>LÓGICO
+            </div>
+            <div class="nodo detalle det-fisico" 
+                 data-tooltip="Describe cómo se almacenan físicamente los datos en el sistema">
+                NIVEL<br>FÍSICO
+            </div>
+            
+            <!-- Tipos de Usuarios -->
+            <div class="nodo detalle det-normales" 
+                 data-tooltip="Usuarios finales que interactúan mediante programas de aplicación">
+                USUARIOS<br>NORMALES
+            </div>
+            <div class="nodo detalle det-program" 
+                 data-tooltip="Desarrolladores que crean programas de aplicación">
+                PROGRAMADORES<br>DE APLICACIONES
+            </div>
+            <div class="nodo detalle det-espec" 
+                 data-tooltip="Desarrolladores de aplicaciones especializadas y complejas">
+                USUARIOS<br>ESPECIALIZADOS
+            </div>
+            <div class="nodo detalle det-dba" 
+                 data-tooltip="Técnico responsable del funcionamiento y eficiencia del sistema">
+                ADMINISTRADOR<br>(DBA)
+            </div>
+
+            <!-- LENGUAJES BD -->
+            <div class="nodo categoria cat-lenguajes" 
+                 data-tooltip="Lenguajes específicos para trabajar con bases de datos">
+                LENGUAJES<br>DE BD
+            </div>
+            
+            <div class="nodo concepto concepto-ddl" 
+                 data-tooltip="Lenguaje de Definición de Datos - especifica estructura y esquemas">
+                DDL<br>(Definición)
+            </div>
+            <div class="nodo concepto concepto-dml" 
+                 data-tooltip="Lenguaje de Manipulación de Datos - accede, consulta y modifica">
+                DML<br>(Manipulación)
+            </div>
+            
+            <!-- Comandos DDL -->
+            <div class="nodo subdetalle sub-create" 
+                 data-tooltip="Comando para crear nuevas tablas y estructuras">
+                CREATE<br>TABLE
+            </div>
+            <div class="nodo subdetalle sub-drop" 
+                 data-tooltip="Comando para eliminar tablas y estructuras existentes">
+                DROP<br>TABLE
+            </div>
+            
+            <!-- Comandos DML -->
+            <div class="nodo subdetalle sub-select" 
+                 data-tooltip="Comando para consultar y recuperar datos">
+                SELECT
+            </div>
+            <div class="nodo subdetalle sub-insert" 
+                 data-tooltip="Comando para insertar nuevos registros">
+                INSERT
+            </div>
+            <div class="nodo subdetalle sub-delete" 
+                 data-tooltip="Comando para eliminar registros existentes">
+                DELETE
+            </div>
+            <div class="nodo subdetalle sub-update" 
+                 data-tooltip="Comando para actualizar registros existentes">
+                UPDATE
+            </div>
+        </div>
+
+        <div class="tooltip" id="tooltip"></div>
+    </div>
+
+    <script>
+        // Función para crear líneas de conexión
+        function crearLinea(x1, y1, x2, y2) {
+            const linea = document.createElement('div');
+            linea.className = 'linea';
+            
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const distancia = Math.sqrt(dx * dx + dy * dy);
+            const angulo = Math.atan2(dy, dx) * 180 / Math.PI;
+            
+            linea.style.width = distancia + 'px';
+            linea.style.left = x1 + 'px';
+            linea.style.top = y1 + 'px';
+            linea.style.transform = `rotate(${angulo}deg)`;
+            
+            return linea;
+        }
+
+        // Crear conexiones jerárquicas
+        function crearConexiones() {
+            const mapa = document.getElementById('mapa');
+            
+            // Limpiar líneas existentes
+            mapa.querySelectorAll('.linea').forEach(linea => linea.remove());
+            
+            // Obtener centro del nodo principal
+            const principal = document.querySelector('.principal');
+            const principalRect = principal.getBoundingClientRect();
+            const mapaRect = mapa.getBoundingClientRect();
+            
+            const principalX = principalRect.left + principalRect.width / 2 - mapaRect.left;
+            const principalY = principalRect.bottom - mapaRect.top;
+
+            // Conectar principal con categorías
+            const categorias = document.querySelectorAll('.categoria');
+            categorias.forEach(categoria => {
+                const rect = categoria.getBoundingClientRect();
+                const x = rect.left + rect.width / 2 - mapaRect.left;
+                const y = rect.top - mapaRect.top;
+                
+                const linea = crearLinea(principalX, principalY, x, y);
+                mapa.appendChild(linea);
+            });
+
+            // Función helper para conectar nodos
+            function conectarNodos(padre, hijos) {
+                const padreElement = document.querySelector(padre);
+                if (!padreElement) return;
+                
+                const padreRect = padreElement.getBoundingClientRect();
+                const padreX = padreRect.left + padreRect.width / 2 - mapaRect.left;
+                const padreY = padreRect.bottom - mapaRect.top;
+                
+                hijos.forEach(hijoSelector => {
+                    const hijo = document.querySelector(hijoSelector);
+                    if (hijo) {
+                        const hijoRect = hijo.getBoundingClientRect();
+                        const hijoX = hijoRect.left + hijoRect.width / 2 - mapaRect.left;
+                        const hijoY = hijoRect.top - mapaRect.top;
+                        
+                        const linea = crearLinea(padreX, padreY, hijoX, hijoY);
+                        mapa.appendChild(linea);
+                    }
+                });
+            }
+
+            // Conexiones específicas por categoría
+            conectarNodos('.cat-conceptos', ['.concepto-dato', '.concepto-info', '.concepto-bd', '.concepto-sistema']);
+            
+            conectarNodos('.cat-objetivos', ['.concepto-objetivos', '.concepto-aplicaciones']);
+            conectarNodos('.concepto-aplicaciones', ['.det-banca', '.det-aerolineas', '.det-universidades', '.det-ventas', '.det-telecom']);
+            
+            conectarNodos('.cat-modelos', ['.concepto-relacional', '.concepto-er', '.concepto-objetos', '.concepto-semiestr']);
+            
+            conectarNodos('.cat-arquitectura', ['.concepto-almacen', '.concepto-consultas']);
+            conectarNodos('.concepto-almacen', ['.det-autoriz', '.det-transac', '.det-archivos', '.det-memoria']);
+            conectarNodos('.concepto-consultas', ['.det-ddl-int', '.det-dml-comp', '.det-motor']);
+            
+            conectarNodos('.cat-niveles', ['.concepto-niveles', '.concepto-usuarios']);
+            conectarNodos('.concepto-niveles', ['.det-vista', '.det-logico', '.det-fisico']);
+            conectarNodos('.concepto-usuarios', ['.det-normales', '.det-program', '.det-espec', '.det-dba']);
+            
+            conectarNodos('.cat-lenguajes', ['.concepto-ddl', '.concepto-dml']);
+            conectarNodos('.concepto-ddl', ['.sub-create', '.sub-drop']);
+            conectarNodos('.concepto-dml', ['.sub-select', '.sub-insert', '.sub-delete', '.sub-update']);
+        }
+
+        // Tooltip functionality
+        const tooltip = document.getElementById('tooltip');
+        const nodos = document.querySelectorAll('.nodo[data-tooltip]');
+
+        nodos.forEach(nodo => {
+            nodo.addEventListener('mouseenter', (e) => {
+                const tooltipText = e.target.getAttribute('data-tooltip');
+                tooltip.textContent = tooltipText;
+                tooltip.classList.add('visible');
+            });
+
+            nodo.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.clientX + 15 + 'px';
+                tooltip.style.top = e.clientY - 40 + 'px';
+            });
+
+            nodo.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('visible');
+            });
+        });
+
+        // Crear conexiones al cargar
+        window.addEventListener('load', () => {
+            setTimeout(crearConexiones, 100);
+        });
+        
+        window.addEventListener('resize', () => {
+            setTimeout(crearConexiones, 100);
+        });
+    </script>
+</body>
+</html>
